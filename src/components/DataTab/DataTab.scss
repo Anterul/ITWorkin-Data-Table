@@ -1,0 +1,19 @@
+.data-tab {
+  width: 1440px;
+  margin: 0 auto;
+  position: relative;
+
+  &__ul {
+    width: 1020px;
+    height: 592px;
+    margin: 0 auto;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #fff;
+    list-style: none;
+    border-left: 1px solid rgba(69, 75, 87, 0.12);
+    border-right: 1px solid rgba(69, 75, 87, 0.12);
+    border-radius: 8px;
+  }
+}

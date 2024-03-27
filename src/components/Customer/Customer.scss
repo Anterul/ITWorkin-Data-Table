@@ -1,0 +1,208 @@
+.customer {
+  margin: 0 auto;
+  width: 1020px;
+  height: 64px;
+  display: grid;
+  grid-template-columns: 28px 34px 199px 268px auto 120px 120px 150px;
+  grid-template-rows: 32px auto;
+  &:nth-of-type(2n) {
+    background-color: #f9fafc;
+  }
+  &:last-of-type {
+    height: 108px;
+  }
+
+  &__custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  &__custom-checkbox .customer__checkmark {
+    position: relative;
+    margin: 12px 0 0 10px;
+    grid-column: 1;
+    grid-row: 1 / 2;
+    display: inline-block;
+    left: 0;
+    height: 16px;
+    width: 16px;
+    border-radius: 4px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgba(89, 96, 120, 0.3);
+    background-color: #fff;
+  }
+
+  &__order-number {
+    margin: 12px 0 0 20px;
+    padding: 0;
+    grid-column: 2;
+    grid-row: 1 / 2;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #171c26;
+  }
+
+  &__name {
+    width: 150px;
+    margin: 12px 0 0 49px;
+    padding: 0;
+    grid-column: 3;
+    grid-row: 1;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #171c26;
+  }
+
+  &__personal-number {
+    width: 150px;
+    margin: 2px 0 0 49px;
+    padding: 0;
+    grid-column: 3;
+    grid-row: 2;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #687182;
+  }
+
+  &__decription {
+    width: 238px;
+    margin: 12px 0 0 30px;
+    padding: 0;
+    grid-column: 4;
+    grid-row: 1 / 2;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #464f60;
+  }
+
+  &__status {
+    width: 52px;
+    margin: 12px 0 0 20px;
+    padding: 0 10px;
+    grid-column: 5;
+    grid-row: 1 / 2;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    text-align: center;
+    color: #4f5aed;
+    background-color: #f0f1fa;
+    border-radius: 10px;
+  }
+
+  &__rate {
+    position: relative;
+    width: 100px;
+    margin: 12px 20px 0 0;
+    padding: 0;
+    grid-column: 6;
+    grid-row: 1;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    color: #464f60;
+    text-align: right;
+
+    > span {
+      position: absolute;
+      top: 22px;
+      right: 0;
+      width: 100px;
+      margin: 0;
+      padding: 0;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px;
+      text-align: right;
+      color: #687182;
+    }
+  }
+
+  &__balance {
+    position: relative;
+    width: 100px;
+    margin: 12px 20px 0 0;
+    padding: 0;
+    grid-column: 7;
+    grid-row: 1;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    color: #d12953;
+    text-align: right;
+
+    > span {
+      position: absolute;
+      top: 22px;
+      right: 0;
+      width: 100px;
+      margin: 0;
+      padding: 0;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px;
+      text-align: right;
+      color: #687182;
+    }
+  }
+
+  &__deposit {
+    position: relative;
+    width: 100px;
+    margin: 12px 50px 0 0;
+    padding: 0;
+    grid-column: 8;
+    grid-row: 1;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    color: #464f60;
+    text-align: right;
+
+    > span {
+      position: absolute;
+      top: 22px;
+      right: 0;
+      width: 100px;
+      margin: 0;
+      padding: 0;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px;
+      text-align: right;
+      color: #687182;
+    }
+  }
+}
+
+/*
+.login__checkbox[type="checkbox"] {
+  display: none;
+  + {
+    span {
+      width: 17px;
+      height: 17px;
+      margin: 0;
+      border: 3px solid $accentLightGrey600;
+      border-radius: 3px;
+    }
+  }
+  &:checked {
+    + {
+      span {
+        background-image: url(../../images/checkmark-yes.svg);
+        background-size: 17px 17px;
+        background-repeat: no-repeat;
+        background-position: center center;
+        border: none;
+      }
+    }
+  }
+}
+*/

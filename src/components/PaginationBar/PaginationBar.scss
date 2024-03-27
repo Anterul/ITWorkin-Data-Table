@@ -1,0 +1,23 @@
+.pagination-bar {
+  width: 1020px;
+  height: 44px;
+  margin: 0 auto;
+  position: absolute;
+  left: 210px;
+  bottom: 0px;
+  backdrop-filter: blur(3px);
+  background-color: rgba(244, 247, 252, 0.75);
+  border-bottom: 1px solid rgba(69, 75, 87, 0.12);
+  border-radius: 8px;
+
+  &__rows-selector {
+    margin: 0;
+    color: red;
+  }
+  &__rows-note {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    color: #687182;
+  }
+}
