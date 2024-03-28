@@ -22,18 +22,25 @@
     color: #687182;
   }
 
-  &__rows-note {
+  &__rows-per-page-counter {
+    margin: 13px 0 0 20px;
     font-weight: 500;
     font-size: 12px;
     line-height: 18px;
     color: #687182;
+
+    > span {
+      line-height: 14px;
+    }
   }
 
-  &__rows-per-page-counter {
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 14px;
-    color: #687182;
+  &__page-selector {
+    width: 16px;
+    height: 16px;
+    margin: 14px 0 0 2px;
+    border: none;
+    background-image: url("../../images/pageSelectorButton.svg");
+    background-color: #f4f7fc;
   }
 
   &__rows-per-page-selector {
@@ -41,7 +48,7 @@
     height: 122px;
     display: none;
     position: absolute;
-    right: 133px;
+    right: 122px;
     bottom: -122px;
     padding: 4px 0;
     border: 1px solid #d9dbe1;
@@ -90,25 +97,25 @@
     background-color: #fff;
     background-repeat: no-repeat;
     background-size: 16px 16px;
-    background-position: 2px 2px;
+    background-position: 3px 1px;
 
     &_direction_back {
+      margin: 12px 0 0 20px;
       background-image: url("../../images/pageBack.svg");
     }
 
     &_direction_forward {
       background-image: url("../../images/pageForward.svg");
+      margin: 12px 0 0 10px;
     }
-    /*
-    > img {
-      margin: 0;
-      padding: 0;
-      width: 24px;
-      height: 20px;
-      object-fit: fill;
-      object-position: 0 0;
+  }
 
-    }
-    */
+  &__current-page-counter {
+    margin: 13px 0 0 10px;
+    padding: 0;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    color: #687182;
   }
 }
