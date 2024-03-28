@@ -5,19 +5,110 @@
   position: absolute;
   left: 210px;
   bottom: 0px;
+  display: flex;
   backdrop-filter: blur(3px);
   background-color: rgba(244, 247, 252, 0.75);
   border-bottom: 1px solid rgba(69, 75, 87, 0.12);
   border-radius: 8px;
 
-  &__rows-selector {
-    margin: 0;
-    color: red;
+  &__total-rows {
+    width: 717px;
+    height: 18px;
+    margin: 13px 0 13px 20px;
+    padding: 0;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    color: #687182;
   }
+
   &__rows-note {
     font-weight: 500;
     font-size: 12px;
     line-height: 18px;
     color: #687182;
+  }
+
+  &__rows-per-page-counter {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    color: #687182;
+  }
+
+  &__rows-per-page-selector {
+    width: 48px;
+    height: 122px;
+    display: none;
+    position: absolute;
+    right: 133px;
+    bottom: -122px;
+    padding: 4px 0;
+    border: 1px solid #d9dbe1;
+    border-radius: 4px;
+    box-shadow: 0 3px 10px 1px rgba(17, 24, 38, 0.2);
+
+    &:focus {
+      outline: none;
+    }
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+  }
+
+  &_open {
+    display: block;
+  }
+
+  &__selector-option {
+    margin: 0 auto;
+    padding: 0;
+    width: 40px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #464f60;
+
+    &:checked {
+      color: #fff;
+      background-color: #2264e5;
+      border-radius: 4px;
+    }
+  }
+
+  &__moving-button {
+    width: 24px;
+    height: 20px;
+    border: none;
+    border: 1px solid rgba(70, 79, 96, 0.2);
+    border-radius: 6px;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    background-position: 2px 2px;
+
+    &_direction_back {
+      background-image: url("../../images/pageBack.svg");
+    }
+
+    &_direction_forward {
+      background-image: url("../../images/pageForward.svg");
+    }
+    /*
+    > img {
+      margin: 0;
+      padding: 0;
+      width: 24px;
+      height: 20px;
+      object-fit: fill;
+      object-position: 0 0;
+
+    }
+    */
   }
 }
