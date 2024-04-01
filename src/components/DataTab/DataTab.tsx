@@ -14,15 +14,19 @@ function DataTab() {
   // стейт для массива с локациями
   const [locations, setLocations] = useState([]);
 
-  // количество отбражаемых строк
-  const [elementsToDisplay, setElementsToDisplay] = useState(15);
+  // выполняется ли в данный момент запрос данных
+  const [isFetchingData, setIsFetchingData] = useState(false);
 
-  // счетчик постов с api/character
+  // количество отбражаемых строк
+  const [elementsToDisplayOnCurrentPage, setElementsToDisplayOnCurrentPage] =
+    useState<number>(15);
+
+  // всего возможных строк с api/character
   const [totalAvailabeCharacters, setTotalAvailableCharacters] = useState(0);
 
   // счетчик общего количества страниц с учетом rows per page(округление в +)
   function countPagesNumber(selectedApiCount: number): number {
-    return Math.ceil(selectedApiCount / elementsToDisplay);
+    return Math.ceil(selectedApiCount / elementsToDisplayOnCurrentPage);
   }
 
   let countPagesNumberForCharacters: number = countPagesNumber(
@@ -33,10 +37,10 @@ function DataTab() {
   let totalLoadedCharacters: number = 0;
 
   // число строк, которое может возвратить apiCharacters
-  const elemetsFromApiCharacters: number = 20;
+  const numberOfReturnedApiCharacters: number = 20;
 
   // текущая страница
-  let currentApiCharactersPage: number = 1;
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   // попап загрузки
   const [isLoadingPopupOpen, setIsLoadingPopupOpen] = useState(false);
@@ -49,25 +53,77 @@ function DataTab() {
   }
 
   ///////////////////////////////////////////////////////////////////////
-  // функция, высчитвыающая с какой страницы загружать контент
-  function computedPageToDownload(rows: any) {
-    if (rows.length !== 0) {
-      return Math.ceil(elementsToDisplay / rows.length);
-    }
-  }
 
-  // проверка на достаточное количество элементов массива
-  function checkArrayLength(rows: any) {
-    const itemsPerPage: number = 20;
-    if (rows.length !== 0) {
-      console.log(Math.ceil(rows.length / itemsPerPage));
-      return Math.ceil(rows.length / itemsPerPage);
+  /* функция, которая подгрузит данные если в массиве меньше контента,
+  чем необходимо отбразить. useEffect ниже сработает от
+  изменения в селекторе выбора количества отбражаемых страниц*/
+  async function getMissingData(arrayFromApi: any) {
+    if (
+      arrayFromApi.length !== 0 &&
+      elementsToDisplayOnCurrentPage > arrayFromApi.length
+    ) {
+      const totalPagesToDownload = Math.ceil(
+        elementsToDisplayOnCurrentPage / arrayFromApi.length
+      );
+      for (let i = 2; i <= totalPagesToDownload; ++i) {
+        await getCharacters(i);
+      }
     }
   }
 
   useEffect(() => {
-    checkArrayLength(characters);
-  }, [elementsToDisplay]);
+    getMissingData(characters);
+  }, [elementsToDisplayOnCurrentPage]);
+
+  // функция, высчитывающая начало рендера
+  function calculateStartOfRendering(): number {
+    if (currentPage === 1) {
+      return 0;
+    } else {
+      return (
+        elementsToDisplayOnCurrentPage * currentPage -
+        elementsToDisplayOnCurrentPage
+      );
+    }
+  }
+
+  //
+  function calculateEndOfRendering(): number {
+    return Number(calculateStartOfRendering()) + elementsToDisplayOnCurrentPage;
+  }
+
+  // проверка на необходимость загрузки новых даных
+  async function getAdditionalData(arrayFromApi: any) {
+    if (
+      arrayFromApi.length - calculateEndOfRendering() <
+      elementsToDisplayOnCurrentPage
+    ) {
+      const numberOfDownloadedPages = Math.ceil(
+        arrayFromApi.length / numberOfReturnedApiCharacters
+      );
+      // сколько загрузить целых страниц с учетом размера отбражаемых элементов
+      const pagesForElementsToDisplay = Math.ceil(
+        elementsToDisplayOnCurrentPage / numberOfReturnedApiCharacters
+      );
+      const numberOfPagesToDownload =
+        numberOfDownloadedPages + pagesForElementsToDisplay;
+      // console.log(numberOfDownloadedPages);
+      // проверка на случай, когда нужно загрузить данные несколько раз
+      if (numberOfPagesToDownload - numberOfDownloadedPages > 1) {
+        for (
+          let i = numberOfDownloadedPages + 1;
+          i <= numberOfPagesToDownload;
+          i++
+        ) {
+          // console.log(i);
+          await getCharacters(i);
+        }
+      } else {
+        getCharacters(numberOfPagesToDownload);
+      }
+    }
+  }
+
   /*
   function checkArrayLength() {
     console.log(elementsToDisplay);
@@ -76,36 +132,60 @@ function DataTab() {
       console.log("элементов в массиве меньше, чем нужно отобразить");
       console.log(downloadElementsForArray(characters));
     }
-  }*/
-
-  // пагинация
-  function loadNextPage() {
-    currentApiCharactersPage++;
-    getCharacters(currentApiCharactersPage);
   }
 
+  useEffect(() => {}, [elementsToDisplay]);
+  
+  */
   ////////////////////////////////////////////////////////////////////
 
-  // запрос к api черновик, переместить
+  // пагинация, следующая страница
+  function loadNextPage() {
+    getAdditionalData(characters);
+    setCurrentPage(currentPage + 1);
+  }
+
+  // пагинация, предыдущая страница
+  function loadPreviousPage() {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  }
+
+  // функция, отвечающая за изменение количества отбражаемых элементов
+  function handleElementsPerPageChange(value: number) {
+    setCurrentPage(1);
+    setElementsToDisplayOnCurrentPage(value);
+  }
+
+  // запрос к api, черновик(переместить в папку api)
   async function getCharacters(pageNumber: number) {
+    setIsFetchingData(true);
     setIsLoadingPopupOpen(true);
     try {
       const response = await axios.get(
         `https://rickandmortyapi.com/api/character?page=${pageNumber}`
       );
-      setCharacters(characters.concat(response.data.results));
-      totalLoadedCharacters += pageNumber;
+      if (characters.length === 0) {
+        setCharacters(response.data.results);
+      } else {
+        setCharacters((prevArray) => {
+          return prevArray.concat(response.data.results);
+        });
+      }
     } catch (error) {
       console.log(error);
     } finally {
+      setIsFetchingData(false);
       loadingPopupCloseTimer();
     }
   }
 
-  useEffect(() => {}, [elementsToDisplay]);
-
   useEffect(() => {
+    /* достаточно прогрузить только первую страницу,
+    т.к. по умолчанию нужно отбразить 15 строк*/
     getCharacters(1);
+    // записываем в переменную сколько всего может быть строк с персонажами
     Api.getCharacterApiInfoCount(
       urlForApi.character,
       setTotalAvailableCharacters,
@@ -113,10 +193,20 @@ function DataTab() {
     );
   }, []);
 
+  // функция для разработки - загрузить несколько страниц подряд
+  async function getManyCharacters() {
+    for (let i = 2; i <= 10; i++) {
+      await getCharacters(i);
+    }
+  }
+
   // кнопки для разработки
-  function customersState(): any {
+  function testFunction1(): any {
     console.log(characters);
-    getCharacters(2);
+
+    getManyCharacters();
+
+    // getCharacters(2);
     /*
     console.log(customers[0]["name"]);
     console.log(apiInfoCount);
@@ -130,7 +220,13 @@ function DataTab() {
 
   function testFunction2(): any {
     console.log(characters);
+    console.log(currentPage);
+    console.log(calculateStartOfRendering());
+    console.log(calculateEndOfRendering());
+    console.log(Math.ceil(20 / 15));
   }
+
+  /*
 
   // рендер строк
   // количество строк, которое нужно разместить на одной странице
@@ -145,8 +241,12 @@ function DataTab() {
       totalLoadedCharacters += pagesToLoad * elemetsFromApiCharacters;
     }
   }
+  */
 
-  const slicedElements = characters.slice(0, elementsToDisplay);
+  const slicedElements = characters.slice(
+    calculateStartOfRendering(),
+    calculateEndOfRendering()
+  );
   const renderdElements = slicedElements.map((item) => (
     <Customer customer={item} key={item["id"]} />
   ));
@@ -156,9 +256,9 @@ function DataTab() {
       <button
         className="data-tab__button"
         type="button"
-        onClick={customersState}
+        onClick={testFunction1}
       >
-        testButton
+        testButton1
       </button>
       <button
         className="data-tab__button"
@@ -170,11 +270,21 @@ function DataTab() {
 
       <ul className="data-tab__ul">{renderdElements}</ul>
       <PaginationBar
-        rowsPerPageCounter={elementsToDisplay}
+        // currentPage
+        currentPage={currentPage}
+        // индексы начала и конца
+        firstOnList={calculateStartOfRendering() + 1}
+        lastOnList={calculateEndOfRendering()}
+        // всего возможных записей с api
+        totalAvailabeCharacters={totalAvailabeCharacters}
+        //
         pagesNumberCounter={countPagesNumberForCharacters}
-        elementsToDisplay={elementsToDisplay}
-        setElementsToDisplay={setElementsToDisplay}
-        goNextPage={loadNextPage}
+        elementsToDisplayOnCurrentPage={elementsToDisplayOnCurrentPage}
+        // изменение количества отбражаемых элементов
+        handleElementsPerPageChange={handleElementsPerPageChange}
+        // логика кнопок пагинации
+        loadPreviousPage={loadPreviousPage}
+        loadNextPage={loadNextPage}
       />
       <LoadingPopup isOpen={isLoadingPopupOpen} />
     </div>

@@ -2,6 +2,9 @@
   width: 1440px;
   margin: 0 auto;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   &__ul {
     width: 1020px;
@@ -15,5 +18,9 @@
     border-left: 1px solid rgba(69, 75, 87, 0.12);
     border-right: 1px solid rgba(69, 75, 87, 0.12);
     border-radius: 8px;
+  }
+
+  &__button {
+    margin: 0 auto;
   }
 }
