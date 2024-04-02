@@ -1,8 +1,8 @@
 import "./SearchBar.scss";
 
-function SearchBar({ setIsSortingPressed }: { setIsSortingPressed: any }) {
-  function handleSortByName() {
-    setIsSortingPressed(true);
+function SearchBar({ handleSortByName }: { handleSortByName: any }) {
+  function handleSortByNameOnClick() {
+    handleSortByName();
   }
   return (
     <div className="search-bar">
@@ -22,7 +22,7 @@ function SearchBar({ setIsSortingPressed }: { setIsSortingPressed: any }) {
         <button
           className="search-bar__sorting-by-name-button"
           type="button"
-          onClick={handleSortByName}
+          onClick={handleSortByNameOnClick}
         >
           NAME
         </button>

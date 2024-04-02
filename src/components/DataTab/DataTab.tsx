@@ -50,30 +50,43 @@ function DataTab() {
     }, 100);
   }
 
-  // сортировка по имени, отслеживание нажатия
+  // сортировка, отслеживание нажатия
   const [isSortingPressed, setIsSortingPressed] = useState(false);
+  function handleSortByName() {
+    setIsSortingPressed(!isSortingPressed);
+  }
 
-  // сортировка по имени
+  // сортировка по имени(придумать болле простой и читаемый способ)
   function sortByName(arrayForSorting: any) {
     // проверка отсортирован ли массив
     function isSortedAlphabetically(arrayForSorting: any[]): boolean {
-      for (let i = 0; i < arrayForSorting.length - 1; i++) {
-        if (arrayForSorting[i].name > arrayForSorting[i + 1].name) {
-          return false; // Если текущий элемент больше следующего, массив не отсортирован
-        }
-      }
-      return true; // Если все элементы удовлетворяют условию сортировки, массив отсортирован
-    }
-    // переключение a-z, z-a
-    if (isSortedAlphabetically(arrayForSorting)) {
-      arrayForSorting.sort(
-        (a: any, b: any) => (a.name > b.name ? -1 : 1)
-        // Сортировка строк от Z-A
+      return arrayForSorting.every(
+        (item, index) =>
+          index === 0 ||
+          item.props.customer.name.localeCompare(
+            arrayForSorting[index - 1].props.customer.name
+          ) >= 0
       );
+    }
+    // проверка нажата ли кнопка сортировки по имени
+    if (isSortingPressed) {
+      // переключение a-z, z-a
+      if (isSortedAlphabetically(arrayForSorting)) {
+        const sortedNotAlphabetically = arrayForSorting.sort((a: any, b: any) =>
+          b.props.customer.name.localeCompare(a.props.customer.name)
+        );
+        return sortedNotAlphabetically;
+      } else {
+        const sortedAlphabetically = arrayForSorting.sort((a: any, b: any) =>
+          a.props.customer.name.localeCompare(b.props.customer.name)
+        );
+        return sortedAlphabetically;
+      }
     } else {
-      arrayForSorting.sort((a: any, b: any) => (a.name > b.name ? 1 : 1));
+      return arrayForSorting;
     }
   }
+
   // отмена отслеживания сортировки, если был переход на другую страницу
   useEffect(() => {
     setIsSortingPressed(false);
@@ -132,7 +145,7 @@ function DataTab() {
       );
       const numberOfPagesToDownload =
         numberOfDownloadedPages + pagesForElementsToDisplay;
-      // console.log(numberOfDownloadedPages);
+
       // проверка на случай, когда нужно загрузить данные несколько раз
       if (numberOfPagesToDownload - numberOfDownloadedPages > 1) {
         for (
@@ -140,7 +153,6 @@ function DataTab() {
           i <= numberOfPagesToDownload;
           i++
         ) {
-          // console.log(i);
           await getCharacters(i);
         }
       } else {
@@ -191,6 +203,7 @@ function DataTab() {
     }
   }
 
+  // useEffect при монтировании
   useEffect(() => {
     /* достаточно прогрузить только первую страницу,
     т.к. по умолчанию нужно отбразить 15 строк*/
@@ -203,31 +216,7 @@ function DataTab() {
     );
   }, []);
 
-  // функция для разработки - загрузить несколько страниц подряд
-  async function getManyCharacters() {
-    for (let i = 2; i <= 10; i++) {
-      await getCharacters(i);
-    }
-  }
-
-  // кнопки для разработки
-  function testFunction1(): any {
-    console.log(characters);
-
-    getManyCharacters();
-
-    // getCharacters(2);
-    /*
-    console.log(customers[0]["name"]);
-    console.log(apiInfoCount);
-    console.log(countPagesNumber());
-    */
-    /*
-    console.log(testArray.length);
-    console.log(computeNewPageNumber(testArray));
-    */
-  }
-
+  // логика рендеринга
   const slicedElements = characters.slice(
     calculateStartOfRendering(),
     calculateEndOfRendering()
@@ -237,34 +226,10 @@ function DataTab() {
     <Customer customer={item} key={item["id"]} />
   ));
 
-  // test
-  const renderdElementsTest: any = slicedElements.sort((a: any, b: any) =>
-    a.name.localeCompare(b.name)
-  );
-
-  function testFunction2(): any {
-    console.log(slicedElements);
-    console.log(renderdElementsTest);
-  }
-
   return (
     <div className="data-tab">
-      <button
-        className="data-tab__button"
-        type="button"
-        onClick={testFunction1}
-      >
-        testButton1
-      </button>
-      <button
-        className="data-tab__button"
-        type="button"
-        onClick={testFunction2}
-      >
-        testButton2
-      </button>
-      <SearchBar setIsSortingPressed={setIsSortingPressed} />
-      <ul className="data-tab__ul">{renderdElements}</ul>
+      <SearchBar handleSortByName={handleSortByName} />
+      <ul className="data-tab__ul">{sortByName(renderdElements)}</ul>
       <PaginationBar
         // currentPage
         currentPage={currentPage}
