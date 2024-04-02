@@ -6,6 +6,7 @@ import axios from "axios";
 import "./DataTab.scss";
 import PaginationBar from "../PaginationBar/PaginationBar";
 import LoadingPopup from "../LoadingPopup/LoadingPopup";
+import SearchBar from "../SearchBar/SearchBar";
 
 function DataTab() {
   // стейт для массива с персонажами
@@ -33,9 +34,6 @@ function DataTab() {
     totalAvailabeCharacters
   );
 
-  // количество загруженных постов
-  let totalLoadedCharacters: number = 0;
-
   // число строк, которое может возвратить apiCharacters
   const numberOfReturnedApiCharacters: number = 20;
 
@@ -52,7 +50,34 @@ function DataTab() {
     }, 100);
   }
 
-  ///////////////////////////////////////////////////////////////////////
+  // сортировка по имени, отслеживание нажатия
+  const [isSortingPressed, setIsSortingPressed] = useState(false);
+
+  // сортировка по имени
+  function sortByName(arrayForSorting: any) {
+    // проверка отсортирован ли массив
+    function isSortedAlphabetically(arrayForSorting: any[]): boolean {
+      for (let i = 0; i < arrayForSorting.length - 1; i++) {
+        if (arrayForSorting[i].name > arrayForSorting[i + 1].name) {
+          return false; // Если текущий элемент больше следующего, массив не отсортирован
+        }
+      }
+      return true; // Если все элементы удовлетворяют условию сортировки, массив отсортирован
+    }
+    // переключение a-z, z-a
+    if (isSortedAlphabetically(arrayForSorting)) {
+      arrayForSorting.sort(
+        (a: any, b: any) => (a.name > b.name ? -1 : 1)
+        // Сортировка строк от Z-A
+      );
+    } else {
+      arrayForSorting.sort((a: any, b: any) => (a.name > b.name ? 1 : 1));
+    }
+  }
+  // отмена отслеживания сортировки, если был переход на другую страницу
+  useEffect(() => {
+    setIsSortingPressed(false);
+  }, [currentPage]);
 
   /* функция, которая подгрузит данные если в массиве меньше контента,
   чем необходимо отбразить. useEffect ниже сработает от
@@ -123,21 +148,6 @@ function DataTab() {
       }
     }
   }
-
-  /*
-  function checkArrayLength() {
-    console.log(elementsToDisplay);
-    console.log(characters);
-    if (characters.length <= elementsToDisplay) {
-      console.log("элементов в массиве меньше, чем нужно отобразить");
-      console.log(downloadElementsForArray(characters));
-    }
-  }
-
-  useEffect(() => {}, [elementsToDisplay]);
-  
-  */
-  ////////////////////////////////////////////////////////////////////
 
   // пагинация, следующая страница
   function loadNextPage() {
@@ -218,38 +228,24 @@ function DataTab() {
     */
   }
 
-  function testFunction2(): any {
-    console.log(characters);
-    console.log(currentPage);
-    console.log(calculateStartOfRendering());
-    console.log(calculateEndOfRendering());
-    console.log(Math.ceil(20 / 15));
-  }
-
-  /*
-
-  // рендер строк
-  // количество строк, которое нужно разместить на одной странице
-  function updateDisplayedItems(count: number) {
-    if (count > totalLoadedCharacters) {
-      let pagesToLoad = Math.ceil(
-        (count - totalLoadedCharacters) / elemetsFromApiCharacters
-      );
-      for (let i = 0; i < pagesToLoad; i++) {
-        getCharacters(currentApiCharactersPage + i);
-      }
-      totalLoadedCharacters += pagesToLoad * elemetsFromApiCharacters;
-    }
-  }
-  */
-
   const slicedElements = characters.slice(
     calculateStartOfRendering(),
     calculateEndOfRendering()
   );
-  const renderdElements = slicedElements.map((item) => (
+
+  let renderdElements = slicedElements.map((item) => (
     <Customer customer={item} key={item["id"]} />
   ));
+
+  // test
+  const renderdElementsTest: any = slicedElements.sort((a: any, b: any) =>
+    a.name.localeCompare(b.name)
+  );
+
+  function testFunction2(): any {
+    console.log(slicedElements);
+    console.log(renderdElementsTest);
+  }
 
   return (
     <div className="data-tab">
@@ -267,7 +263,7 @@ function DataTab() {
       >
         testButton2
       </button>
-
+      <SearchBar setIsSortingPressed={setIsSortingPressed} />
       <ul className="data-tab__ul">{renderdElements}</ul>
       <PaginationBar
         // currentPage

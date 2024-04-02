@@ -1,0 +1,110 @@
+.search-bar {
+  width: 1020px;
+  height: 104px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid rgba(69, 75, 87, 0.12);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+
+  &__filter-button {
+    width: 40px;
+    height: 32px;
+    margin: 16px 0 0 20px;
+    padding: 0;
+    background-color: #fff;
+    background-image: url("../../images/filter.svg");
+    background-size: 16px 16px;
+    background-position: 12px 8px;
+    background-repeat: no-repeat;
+    border: 1px solid #d0d5db;
+    border-radius: 6px;
+  }
+
+  &__search-input {
+    width: 320px;
+    height: 32px;
+    margin: 16px 0 0 16px;
+    padding: 0 12px 0 36px;
+    // overflow: hidden;как сделать чтобы скроллбар заезжал на блок &
+    font-weight: 400px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #a1a9b8;
+    background-image: url("../../images/Search.svg");
+    background-size: 16px 16px;
+    background-position: 12px 8px;
+    background-repeat: no-repeat;
+    border: 1px solid #d0d5db;
+    border-radius: 6px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__add-customer-button {
+    width: 146px;
+    height: 32px;
+    margin: 16px 0 0 458px;
+    padding: 0 0 0 8px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #fff;
+    background-color: #2264e5;
+    background-image: url("../../images/add.svg");
+    background-size: 16px 16px;
+    background-position: 12px 8px;
+    background-repeat: no-repeat;
+    border: none;
+    border-radius: 6px;
+  }
+
+  &__search-frame {
+    width: 1020px;
+    height: 40px;
+    margin: 16px 0 0 0;
+    padding: 0;
+  }
+
+  &__checkbox input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  &__checkbox .search-bar__checkmark {
+    position: relative;
+    margin: 12px 0 0 10px;
+    display: inline-block;
+    left: 0;
+    height: 16px;
+    width: 16px;
+    border-radius: 4px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgba(89, 96, 120, 0.3);
+    background-color: #fff;
+  }
+
+  &__sorting-by-name-button {
+    width: 140px;
+    height: 40px;
+    margin: 0 0 0 84px;
+    padding: 0;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 16px;
+    text-align: start;
+    color: #464f60;
+    background-color: #f7f9fc;
+    background-image: url("../../images/column-sorting.svg");
+    background-size: 16px 16px;
+    background-position: 37px 12px;
+    background-repeat: no-repeat;
+    border: none;
+  }
+}

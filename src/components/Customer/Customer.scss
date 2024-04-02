@@ -181,29 +181,3 @@
     }
   }
 }
-
-/*
-.login__checkbox[type="checkbox"] {
-  display: none;
-  + {
-    span {
-      width: 17px;
-      height: 17px;
-      margin: 0;
-      border: 3px solid $accentLightGrey600;
-      border-radius: 3px;
-    }
-  }
-  &:checked {
-    + {
-      span {
-        background-image: url(../../images/checkmark-yes.svg);
-        background-size: 17px 17px;
-        background-repeat: no-repeat;
-        background-position: center center;
-        border: none;
-      }
-    }
-  }
-}
-*/
